@@ -153,18 +153,14 @@ def wang_landau(N, E, s):
         if (i % 1000 == 0):
             hmed = np.sum(H)/(N-1)
             hmin = sub_min(H)
-            
-#             print(f"H={H}, Hc={Hc}, lnf={lnf}")
-#             print(f"hmed={round(hmed,2)}, hmin={round(hmin,2)}, "+
-#                   f"flat_condition:{round(hmin,2)}>{round(0.8*hmed,2)}, "+
-#                   f"i={i}, lnf={lnf}")
-            print(round(hmed,2),round(hmin,2),round(hmin,2),
-                  round(0.8*hmed,2), i, lnf)
 
             if (hmin > 0.8*hmed):
                 Hc = H.copy()
                 H = np.zeros(N+1, dtype=np.int64)
                 lnf = lnf/2
+                if (i % 10000 == 0):
+                    print(round(hmed,2),round(hmin,2),round(hmin,2),
+                        round(0.8*hmed,2), i, lnf)
         if (lnf < 10**-8):
             break
     mmicro = mmicro/Hc
@@ -172,21 +168,24 @@ def wang_landau(N, E, s):
     lnG = lnG - lnG0 + np.log(2)
     return lnG, mmicro
 
-# Parse dos argumentos
-parser = argparse.ArgumentParser()
-parser.add_argument("L", help="Tamanho da rede LxL")
-args = parser.parse_args()
-print(args.L)
-L = int(args.L)
+def main():
+    # Parse dos argumentos
+    parser = argparse.ArgumentParser()
+    parser.add_argument("L", help="Tamanho da rede LxL")
+    args = parser.parse_args()
+    L = int(args.L)
 
-N = L**2
-s = random_energy_state(N)
-viz = neighbours(N,np.sqrt(N))
-E = energy_ising(s,viz)
-E = energy_scale(N,E)
-lnG, mmicro = wang_landau(N, E, s)
-with open("wang"+str(L)+"x"+str(L)+".dict", "wb") as f:
-    pickle.dump(lnG, f)
-with open(f"mag"+str(L)+"x"+str(L)+".dict", "wb") as f:
-    pickle.dump(mmicro, f)
-print("Criado rede "+str(L)+"x"+str(L))
+    N = L**2
+    s = random_energy_state(N)
+    viz = neighbours(N,np.sqrt(N))
+    E = energy_ising(s,viz)
+    E = energy_scale(N,E)
+    lnG, mmicro = wang_landau(N, E, s)
+    with open("wang"+str(L)+"x"+str(L)+".dict", "wb") as f:
+        pickle.dump(lnG, f)
+    with open(f"mag"+str(L)+"x"+str(L)+".dict", "wb") as f:
+        pickle.dump(mmicro, f)
+    print("Criado rede "+str(L)+"x"+str(L))
+
+if __name__=="__main__":
+    main()
