@@ -147,8 +147,7 @@ def wang_landau(N, E, s):
                     m = m - 2*s[k]
             H[E] = H[E] + 1
             lnG[E] = lnG[E] + lnf
-            ## Usando o abs no mmicro (?)
-            mmicro[E] = mmicro[E] + m
+            mmicro[E] = mmicro[E] + np.abs(m)
             
         if (i % 1000 == 0):
             hmed = np.sum(H)/(N-1)
