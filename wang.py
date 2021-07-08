@@ -163,6 +163,9 @@ def wang_landau(N, E, s):
         if (lnf < 10**-8):
             break
     mmicro = mmicro/Hc
+    # Normalizar o vetor de magnetização
+    maior = max(mmicro)
+    mmicro = mmicro / maior
     lnG0 = lnG[0]
     lnG = lnG - lnG0 + np.log(2)
     return lnG, mmicro
